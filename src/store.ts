@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
-import { emptyData, type Data } from './types'
+import { emptyData, fromStored, type Data } from './types'
 
 // The whole dataset is small (a few hundred KB after years), so it is stored
 // as one JSON document in IndexedDB and rewritten on every change.
@@ -20,7 +20,7 @@ async function load(): Promise<Data> {
   const db = await open()
   return new Promise((resolve, reject) => {
     const req = db.transaction(STORE).objectStore(STORE).get(KEY)
-    req.onsuccess = () => resolve(req.result ? { ...emptyData(), ...req.result } : emptyData())
+    req.onsuccess = () => resolve(req.result ? fromStored(req.result) : emptyData())
     req.onerror = () => reject(req.error)
   })
 }

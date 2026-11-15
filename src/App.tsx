@@ -5,12 +5,14 @@ import Today from './Today'
 import WeekView from './WeekView'
 import Trends from './Trends'
 import Settings from './Settings'
+import Dreams from './Dreams'
 
-type Tab = 'today' | 'week' | 'trends' | 'settings'
+type Tab = 'today' | 'week' | 'dreams' | 'trends' | 'settings'
 
 const TABS: { id: Tab; label: string; icon: string }[] = [
   { id: 'today', label: 'Today', icon: '☀' },
   { id: 'week', label: 'Week', icon: '▦' },
+  { id: 'dreams', label: 'Dreams', icon: '✦' },
   { id: 'trends', label: 'Trends', icon: '▁▃▅' },
   { id: 'settings', label: 'Settings', icon: '⚙' },
 ]
@@ -35,6 +37,7 @@ export default function App() {
         )}
         {tab === 'today' && <Today data={data} update={update} goToWeek={() => { setWeekStart(mondayOf(today())); setTab('week') }} />}
         {tab === 'week' && <WeekView data={data} update={update} start={weekStart} setStart={setWeekStart} />}
+        {tab === 'dreams' && <Dreams data={data} update={update} />}
         {tab === 'trends' && <Trends data={data} />}
         {tab === 'settings' && <Settings data={data} update={update} />}
       </main>

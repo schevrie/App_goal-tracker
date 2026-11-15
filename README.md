@@ -1,6 +1,7 @@
 # Focus – weekly goals
 
-A phone-first web app for the weekly Focus System: Monday planning with 3 must-wins and smaller items, a daily
+A phone-first web app for the weekly Focus System: Monday planning with 3 must-wins and smaller items, a dream list
+across the six areas of life (every goal and dream can be tagged with one), a daily
 morning check-in and meetings log, a Friday close, and trends across weeks. It installs to the home screen and
 works offline.
 
