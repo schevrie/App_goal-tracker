@@ -77,6 +77,8 @@ export interface Dream {
   title: string
   area: LifeArea | null
   achieved: boolean
+  /** Date the dream was written down, YYYY-MM-DD. */
+  added?: string
 }
 
 export interface Settings {
@@ -103,6 +105,20 @@ export const emptyData = (): Data => ({
   meetings: [],
   dreams: [],
 })
+
+/** Add dreams from another file, skipping any whose title is already on the list. */
+export const mergeDreams = (current: Dream[], incoming: Dream[]): Dream[] => {
+  const seen = new Set(current.map((d) => d.title.trim().toLowerCase()))
+  const added: Dream[] = []
+  for (const d of incoming) {
+    const key = (d.title ?? '').trim().toLowerCase()
+    if (!key || seen.has(key)) continue
+    seen.add(key)
+    const area = LIFE_AREAS.some((a) => a.id === d.area) ? d.area : null
+    added.push({ id: uid(), title: d.title.trim(), area, achieved: !!d.achieved, ...(d.added ? { added: d.added } : {}) })
+  }
+  return [...current, ...added]
+}
 
 /** Fill fields added after the data was saved (stored data and backup files). */
 export const fromStored = (raw: Partial<Data>): Data => {

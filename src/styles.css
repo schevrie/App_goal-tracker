@@ -164,8 +164,10 @@ select.area.none { color: var(--muted); }
 
 .dream { display: grid; grid-template-columns: auto 1fr auto; gap: 8px; align-items: center; border-top: 1px solid var(--line); padding: 8px 0; }
 .dream:first-of-type { border-top: 0; padding-top: 0; }
-.dream.achieved input.title { text-decoration: line-through; color: var(--muted); }
+.dream textarea.title { resize: none; overflow: hidden; }
+.dream.achieved .title { text-decoration: line-through; color: var(--muted); }
 .dream select.area { grid-column: 2 / 4; }
+.dream .added { grid-column: 2 / 4; font-size: 0.7rem; color: var(--muted); margin-top: -4px; }
 form.add { display: flex; gap: 8px; margin-top: 8px; }
 form.add button { flex: none; }
 .card > header .count { font-size: 0.8rem; color: var(--muted); }

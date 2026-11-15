@@ -4,16 +4,9 @@ import { fromStored, uid } from './types'
 import type { Update } from './store'
 import { fmt, today } from './dates'
 import { mergeImport, parsePlanner, readWorkbook } from './importXlsx'
+import { pickFile } from './files'
 import { AreaSelect, Card, Field, NumberInput } from './ui'
 
-const pickFile = (accept: string) =>
-  new Promise<File | null>((resolve) => {
-    const input = document.createElement('input')
-    input.type = 'file'
-    input.accept = accept
-    input.onchange = () => resolve(input.files?.[0] ?? null)
-    input.click()
-  })
 
 export default function Settings(props: { data: Data; update: Update }) {
   const { data, update } = props

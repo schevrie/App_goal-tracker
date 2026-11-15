@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { carry } from './model'
-import { areaLabel, fromStored, LIFE_AREAS, type Data } from './types'
+import { areaLabel, fromStored, LIFE_AREAS, mergeDreams, type Data } from './types'
 
 describe('life areas', () => {
   it('has the six Plan of Action areas', () => {
@@ -37,5 +37,21 @@ describe('life areas', () => {
   it('round-trips dreams and areas through a backup file', () => {
     const d = fromStored({ dreams: [{ id: 'x', title: 'See the northern lights', area: 'social', achieved: false }] })
     expect(fromStored(JSON.parse(JSON.stringify(d)))).toEqual(d)
+  })
+})
+
+describe('adding dreams from a file', () => {
+  it('skips titles already on the list and drops unknown areas', () => {
+    const current = [{ id: '1', title: 'Move back to Wallis', area: 'financial' as const, achieved: false }]
+    const merged = mergeDreams(current, [
+      { id: 'a', title: ' move back to wallis ', area: 'family', achieved: false },
+      { id: 'b', title: 'Reach 100 km on the bike', area: 'physical', achieved: false, added: '2026-11-15' },
+      { id: 'c', title: 'Something', area: 'nonsense' as never, achieved: false },
+    ])
+    expect(merged.map((d) => d.title)).toEqual(['Move back to Wallis', 'Reach 100 km on the bike', 'Something'])
+    expect(merged[1].added).toBe('2026-11-15')
+    expect(merged[2].area).toBeNull()
+    // Importing the same file twice adds nothing.
+    expect(mergeDreams(merged, merged)).toHaveLength(3)
   })
 })
