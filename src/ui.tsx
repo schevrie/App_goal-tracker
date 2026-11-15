@@ -1,4 +1,21 @@
 import type { ReactNode } from 'react'
+import { LIFE_AREAS, type LifeArea } from './types'
+
+export function AreaSelect(props: { value: LifeArea | null | undefined; onChange: (v: LifeArea | null) => void }) {
+  return (
+    <select
+      className={`area ${props.value ? '' : 'none'}`}
+      aria-label="Area of life"
+      value={props.value ?? ''}
+      onChange={(e) => props.onChange((e.target.value || null) as LifeArea | null)}
+    >
+      <option value="">No area</option>
+      {LIFE_AREAS.map((a) => (
+        <option key={a.id} value={a.id}>{a.label}</option>
+      ))}
+    </select>
+  )
+}
 
 export function Segmented<T extends string>(props: {
   value: T | null

@@ -1,10 +1,10 @@
 import { useState } from 'react'
 import type { Data } from './types'
-import { emptyData, uid } from './types'
+import { fromStored, uid } from './types'
 import type { Update } from './store'
 import { fmt, today } from './dates'
 import { mergeImport, parsePlanner, readWorkbook } from './importXlsx'
-import { Card, Field, NumberInput } from './ui'
+import { AreaSelect, Card, Field, NumberInput } from './ui'
 
 const pickFile = (accept: string) =>
   new Promise<File | null>((resolve) => {
@@ -52,7 +52,7 @@ export default function Settings(props: { data: Data; update: Update }) {
       const parsed = JSON.parse(await f.text()) as Data
       if (parsed.version !== 1 || !parsed.weeks) throw new Error('not a Focus backup')
       if (!confirm('Replace everything in the app with this backup?')) return
-      update(() => ({ ...emptyData(), ...parsed }))
+      update(() => fromStored(parsed))
       setMsg('Backup restored.')
     } catch (e) {
       setMsg(`Could not restore: ${(e as Error).message}`)
@@ -78,11 +78,14 @@ export default function Settings(props: { data: Data; update: Update }) {
       <Card title="Behavioural goals">
         <p className="muted small">Meeting decisiveness is tracked from your meetings log. Add other goals to rate 1–5 each Friday.</p>
         {s.goals.map((g) => (
-          <div key={g.id} className="row goal">
-            <input value={g.name} onChange={(e) => setS({ goals: s.goals.map((x) => (x.id === g.id ? { ...x, name: e.target.value } : x)) })} />
-            <button className="link" onClick={() => setS({ goals: s.goals.map((x) => (x.id === g.id ? { ...x, active: !x.active } : x)) })}>
-              {g.active ? 'Archive' : 'Restore'}
-            </button>
+          <div key={g.id} className="goal">
+            <div className="row">
+              <input value={g.name} onChange={(e) => setS({ goals: s.goals.map((x) => (x.id === g.id ? { ...x, name: e.target.value } : x)) })} />
+              <button className="link" onClick={() => setS({ goals: s.goals.map((x) => (x.id === g.id ? { ...x, active: !x.active } : x)) })}>
+                {g.active ? 'Archive' : 'Restore'}
+              </button>
+            </div>
+            <AreaSelect value={g.area} onChange={(area) => setS({ goals: s.goals.map((x) => (x.id === g.id ? { ...x, area } : x)) })} />
           </div>
         ))}
         <form
@@ -90,7 +93,7 @@ export default function Settings(props: { data: Data; update: Update }) {
           onSubmit={(e) => {
             e.preventDefault()
             if (!newGoal.trim()) return
-            setS({ goals: [...s.goals, { id: uid(), name: newGoal.trim(), active: true }] })
+            setS({ goals: [...s.goals, { id: uid(), name: newGoal.trim(), active: true, area: null }] })
             setNewGoal('')
           }}
         >

@@ -38,6 +38,7 @@ export const carry = (item: Item): Item => ({
   type: item.type,
   hours: item.hours,
   status: 'open',
+  area: item.area ?? null,
   carriedFrom: item.id,
 })
 

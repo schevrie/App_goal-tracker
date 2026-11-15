@@ -4,7 +4,7 @@ import type { Update } from './store'
 import { addDays, fmt, mondayOf, today } from './dates'
 import { pct, weekMetrics } from './metrics'
 import { MAX_MUST_WINS, blankWeek, carry, carryCandidates, newItem, previousWeek } from './model'
-import { Card, Field, NumberInput, Segmented, Stat, Text } from './ui'
+import { AreaSelect, Card, Field, NumberInput, Segmented, Stat, Text } from './ui'
 
 const STATUS: { value: ItemStatus; label: string; tone?: string }[] = [
   { value: 'open', label: 'Open' },
@@ -30,6 +30,7 @@ function ItemRow(props: { item: Item; onChange: (i: Item) => void; onRemove: () 
         placeholder={props.hoursOptional ? 'Smaller item' : 'Must-win outcome'}
         onChange={(e) => onChange({ ...item, title: e.target.value })}
       />
+      <AreaSelect value={item.area} onChange={(area) => onChange({ ...item, area })} />
       <div className="row">
         <Segmented
           value={item.type}
